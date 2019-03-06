@@ -1,18 +1,22 @@
 public class Gene extends Identifier{
-    private int containingCellId;
+    private String tag;
     private boolean active;
 
-    public Gene(int containingCellId) {
-        this.containingCellId = containingCellId;
+    public Gene(String tag) {
+        this.tag = tag;
     }
 
-    public Gene(int containingCellId, boolean active) {
-        this.containingCellId = containingCellId;
+    public Gene(String tag, boolean active) {
+        this.tag = tag;
         this.active = active;
     }
 
-    public int getContainingCellId() {
-        return containingCellId;
+    public String getTag() {
+        return tag;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public boolean isActive() {
