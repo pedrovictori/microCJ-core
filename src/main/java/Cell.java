@@ -3,9 +3,10 @@ import java.util.List;
 public class Cell extends Identifier{
     private boolean alive = true;
     private int age = 0;
-    private List<Gene> genes;
+    private GeneGraph geneGraph;
 
     public Cell() {
+        geneGraph = new GeneGraph(getId());
     }
 
     public boolean isAlive() {
@@ -16,7 +17,7 @@ public class Cell extends Identifier{
         return age;
     }
 
-    public List<Gene> getGenes() {
-        return genes;
+    public GeneGraph getGeneGraph() {
+        return geneGraph;
     }
 }
