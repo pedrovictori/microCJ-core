@@ -5,7 +5,7 @@ public class Identifier implements Identifiable {
     final int id = NEXT_ID.getAndIncrement(); //get a new id when the new object initializes its fields. Atomic ensures safety in concurrency
 
     @Override
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 }
