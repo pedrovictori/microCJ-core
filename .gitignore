@@ -12,3 +12,7 @@
 hs_err_pid*
 
 target/classes/
+
+*.iml
+
+target/maven-status/maven-compiler-plugin/compile/default-cli/
