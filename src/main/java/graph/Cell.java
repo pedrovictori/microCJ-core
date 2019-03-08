@@ -1,4 +1,4 @@
-import java.util.List;
+package graph;
 
 public class Cell extends Identifier{
     private boolean alive = true;

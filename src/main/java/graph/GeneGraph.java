@@ -1,11 +1,10 @@
+package graph;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.io.*;
 
 import java.io.File;
-import java.io.StringWriter;
-import java.io.Writer;
 
 public class GeneGraph {
     private int containingCellId;

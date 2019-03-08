@@ -1,3 +1,5 @@
+package graph;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Identifier implements Identifiable {

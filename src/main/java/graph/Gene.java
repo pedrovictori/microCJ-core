@@ -1,3 +1,5 @@
+package graph;
+
 public class Gene extends Identifier{
     private String tag;
     private boolean active;
@@ -21,5 +23,10 @@ public class Gene extends Identifier{
 
     public boolean isActive() {
         return active;
+    }
+
+    @Override
+    public String toString() {
+        return tag;
     }
 }

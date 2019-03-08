@@ -1,3 +1,5 @@
+package graph;
+
 public class GeneLink extends Identifier{
 	private Gene target;
 	private Gene source;
@@ -13,5 +15,10 @@ public class GeneLink extends Identifier{
 
 	public Gene getSource() {
 		return source;
+	}
+
+	@Override
+	public String toString() {
+		return ""; //todo remove this later, just for visualization testing
 	}
 }
