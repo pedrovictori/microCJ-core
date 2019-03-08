@@ -1,10 +1,11 @@
+import graph.Gene;
+import graph.GeneGraph;
+import graph.GeneLink;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.io.*;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GraphTest {
 	public static void main(String[] args) {
