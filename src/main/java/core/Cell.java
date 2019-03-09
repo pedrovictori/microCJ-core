@@ -1,6 +1,8 @@
-package graph;
+package core;
 
-public class Cell extends Identifier{
+import graph.GeneGraph;
+
+public class Cell extends Identifier {
     private boolean alive = true;
     private int age = 0;
     private GeneGraph geneGraph;

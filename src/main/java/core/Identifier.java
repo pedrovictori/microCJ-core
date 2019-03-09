@@ -1,4 +1,4 @@
-package graph;
+package core;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

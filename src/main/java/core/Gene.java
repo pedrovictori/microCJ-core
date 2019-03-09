@@ -1,6 +1,8 @@
-package graph;
+package core;
 
-public class Gene extends Identifier{
+import graph.GeneLink;
+
+public class Gene extends Identifier implements Node {
     private String tag;
     private boolean active;
 
@@ -13,16 +15,29 @@ public class Gene extends Identifier{
         this.active = active;
     }
 
+    @Override
     public String getTag() {
         return tag;
     }
 
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    @Override
     public boolean isActive() {
         return active;
+    }
+
+    @Override
+    public GeneLink[] getOutgoingLinks() {
+        return new GeneLink[0];
+    }
+
+    @Override
+    public GeneLink[] getIncomingLinks() {
+        return new GeneLink[0];
     }
 
     @Override
