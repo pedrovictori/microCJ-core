@@ -1,19 +1,22 @@
 package graph;
 
-public class GeneLink extends Identifier{
-	private Gene target;
-	private Gene source;
+import core.Identifier;
+import core.Node;
 
-	public GeneLink(Gene target, Gene source){
+public class GeneLink extends Identifier {
+	private Node target;
+	private Node source;
+
+	public GeneLink(Node target, Node source){
 		this.target = target;
 		this.source = source;
 	}
 
-	public Gene getTarget() {
+	public Node getTarget() {
 		return target;
 	}
 
-	public Gene getSource() {
+	public Node getSource() {
 		return source;
 	}
 

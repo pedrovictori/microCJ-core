@@ -1,4 +1,4 @@
-import graph.Gene;
+import core.Node;
 import graph.GeneGraph;
 import graph.GeneLink;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -12,7 +12,7 @@ public class GraphTest {
 		GeneGraph geneGraph = new GeneGraph(1);
 
 		//export and print in DOT format
-		GraphExporter<Gene, GeneLink> exporter = createDotExporter();
+		GraphExporter<Node, GeneLink> exporter = createDotExporter();
 		Writer writer = new StringWriter();
 
 		try {
@@ -24,14 +24,14 @@ public class GraphTest {
 		System.out.println(writer.toString());
 	}
 
-	private static GraphExporter<Gene, GeneLink> createDotExporter()
+	private static GraphExporter<Node, GeneLink> createDotExporter()
 	{
 		/*
 		 * Create vertex id provider.
 		 *
 		 * The exporter needs to generate for each vertex a unique identifier.
 		 */
-		ComponentNameProvider<Gene> vertexIdProvider = v -> v.getTag();
+		ComponentNameProvider<Node> vertexIdProvider = v -> v.getTag();
 
 		/*
 		 * Create vertex label provider.
@@ -39,7 +39,7 @@ public class GraphTest {
 		 * The exporter may need to generate for each vertex a (not necessarily unique) label. If
 		 * null the exporter does not output any labels.
 		 */
-		ComponentNameProvider<Gene> vertexLabelProvider = v -> null;
+		ComponentNameProvider<Node> vertexLabelProvider = v -> null;
 
 		/*
 		 * Create edge id provider.
@@ -59,7 +59,7 @@ public class GraphTest {
 		/*
 		 * Create the exporter
 		 */
-		DOTExporter<Gene,
+		DOTExporter<Node,
 				GeneLink> exporter = new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
 
 		return exporter;
