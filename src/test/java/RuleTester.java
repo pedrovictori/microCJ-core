@@ -28,6 +28,12 @@ public class RuleTester {
 		values.put("ERK", false);
 		values.put("AKT", false);
 
+		//checking it works when variables not present in the expression are assigned
+		values.put("RARSTS", false);
+		values.put("PRSTKC", true);
+		values.put("ERCDXK", false);
+		values.put("AKWFT", false);
+
 		Expression<String> resolved = RuleSet.assign(parsedExpression, values);
 		Boolean bool = Boolean.parseBoolean(resolved.toString());
 		System.out.println("4: " + bool);
