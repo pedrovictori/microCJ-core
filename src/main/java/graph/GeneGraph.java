@@ -1,8 +1,6 @@
 package graph;
 
-import core.Gene;
-import core.Node;
-import core.Rule;
+import core.*;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.io.*;
@@ -51,15 +49,27 @@ public class GeneGraph {
 
     private static GraphImporter<Node, GeneLink> createImporter(){
         VertexProvider<Node> vertexProvider = (id, attributes) -> {
-            Node v = new Gene(id);
+            String shape = attributes.get("MY-SHAPE").getValue();
+            Node v;
+            if(attributes.containsKey("MY-RULE")) { //it's a gene or a cellular fate
+                String rule = attributes.get("MY-RULE").getValue();
 
-            //todo: deal with attributes
+                if(shape.equals("rect")){ //it's a fate
+                    v = new Fate(id, rule);
+                }
+                else{
+                    v = new Gene(id, rule);
+                }
+            }
+            else{ //it's an input
+                v = new Input(id);
+            }
 
             return v;
         };
 
         EdgeProvider<Node, GeneLink> edgeProvider = (from, to, label, attributes) -> {
-            GeneLink link = new GeneLink(from, to);
+            GeneLink link = new GeneLink(from, to, attributes.get("SIGN-OF-LINK").getValue().equals("positive"));
             return link;
         };
 
