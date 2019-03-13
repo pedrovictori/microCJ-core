@@ -37,6 +37,14 @@ public class GeneGraph {
         return graph;
     }
 
+    public Set<GeneLink> getEdges() {
+        return getGraph().edgeSet();
+    }
+
+    public Set<Node> getNodes() {
+        return getGraph().vertexSet();
+    }
+
     public Node findNodeWithTag(String tag) {
         for (Node node : getGraph().vertexSet()) {
             if(node.getTag().equals(tag)){
