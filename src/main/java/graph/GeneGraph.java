@@ -6,6 +6,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.io.*;
 
 import java.io.File;
+import java.util.Set;
 
 public class GeneGraph {
     private int containingCellId;
@@ -77,7 +78,7 @@ public class GeneGraph {
         };
 
         EdgeProvider<Node, GeneLink> edgeProvider = (from, to, label, attributes) -> {
-            GeneLink link = new GeneLink(from, to, attributes.get("SIGN-OF-LINK").getValue().equals("positive"));
+            GeneLink link = new GeneLink(to, from, attributes.get("SIGN-OF-LINK").getValue().equals("positive"));
             return link;
         };
 
