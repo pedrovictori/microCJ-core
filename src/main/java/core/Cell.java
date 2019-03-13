@@ -12,12 +12,12 @@ public class Cell extends Identifier {
     /**
      * the cell radius
      */
-    private double size;
-    private final static double DEFAULT_SIZE = 10;
+    private double radius;
+    private final static double DEFAULT_RADIUS = 5;
 
     public Cell() {
         geneGraph = new GeneGraph(getId());
-        size = DEFAULT_SIZE;
+        radius = DEFAULT_RADIUS;
     }
 
     public Cell(Point3D location) {
@@ -25,15 +25,15 @@ public class Cell extends Identifier {
         this.location = location;
     }
 
-    public Cell(Point3D location, double size) {
+    public Cell(Point3D location, double radius) {
         this(location);
-        this.size = size;
+        this.radius = radius;
     }
 
 
 
-    public static double getDefaultSize() {
-        return DEFAULT_SIZE;
+    public static double getDefaultRadius() {
+        return DEFAULT_RADIUS;
     }
 
     public boolean isAlive() {
@@ -52,12 +52,12 @@ public class Cell extends Identifier {
         this.location = location;
     }
 
-    public double getSize() {
-        return size;
+    public double getRadius() {
+        return radius;
     }
 
-    public void setSize(double size) {
-        this.size = size;
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
     public int getAge() {
