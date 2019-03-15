@@ -1,4 +1,16 @@
 package graph;
+/**
+ * @author Pedro Victori
+ */
+/*
+Copyright 2019 Pedro Victori
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
 
 import core.Identifier;
 import core.Node;
@@ -6,14 +18,14 @@ import core.Node;
 public class GeneLink extends Identifier {
 	private Node target;
 	private Node source;
-	private boolean positive;
+	private Boolean positive;
 
-	public GeneLink(Node target, Node source){
+	public GeneLink(Node source, Node target){
 		this.target = target;
 		this.source = source;
 	}
 
-	public GeneLink(Node target, Node source, boolean positive) {
+	public GeneLink(Node source, Node target, boolean positive) {
 		this(target, source);
 		this.positive = positive;
 	}
