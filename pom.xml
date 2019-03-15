@@ -23,8 +23,8 @@
     </properties>
 
 
-    <groupId>microC2</groupId>
-    <artifactId>microC2-core</artifactId>
+    <groupId>microCJ</groupId>
+    <artifactId>microCJ-core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
