@@ -1,16 +1,34 @@
 package graph;
+/**
+ * @author Pedro Victori
+ */
+/*
+Copyright 2019 Pedro Victori
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
 
 import core.*;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.io.*;
+import org.jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.traverse.GraphIterator;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class GeneGraph {
     private int containingCellId;
     private Graph<Node, GeneLink> graph;
+    private List<Node> nodes;
 
     public GeneGraph(int containingCellId) {
         this.containingCellId = containingCellId;
@@ -46,9 +64,39 @@ public class GeneGraph {
         return getGraph().vertexSet();
     }
 
+    public Set<Node> getGenes() {
+        Set<Node> set = new HashSet<>();
+        for (Node node : getNodes()) {
+            if (node instanceof Gene) {
+                set.add(node);
+            }
+        }
+        return set;
+    }
+
+    public Set<Node> getInputs() {
+        Set<Node> set = new HashSet<>();
+        for (Node node : getNodes()) {
+            if (node instanceof Input) {
+                set.add(node);
+            }
+        }
+        return set;
+    }
+
+    public Set<Node> getFates() {
+        Set<Node> set = new HashSet<>();
+        for (Node node : getNodes()) {
+            if (node instanceof Fate) {
+                set.add(node);
+            }
+        }
+        return set;
+    }
+
     public Node findNodeWithTag(String tag) {
         for (Node node : getGraph().vertexSet()) {
-            if(node.getTag().equals(tag)){
+            if (node.getTag().equals(tag)) {
                 return node;
             }
         }
