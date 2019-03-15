@@ -12,20 +12,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import core.Gene;
-import core.Input;
 import core.Node;
 import graph.GeneGraph;
 import graph.GeneLink;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.io.*;
+import org.jgrapht.io.ComponentNameProvider;
+import org.jgrapht.io.DOTExporter;
+import org.jgrapht.io.ExportException;
+import org.jgrapht.io.GraphExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
-import org.jgrapht.traverse.GraphIterator;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GraphTest {
 	public static void main(String[] args) {
