@@ -104,21 +104,49 @@ public class GeneGraph {
         return null;
     }
 
-    private static GraphImporter<Node, GeneLink> createImporter(){
+    public GraphIterator<Node, GeneLink> iteratorFromInputsDown() {
+        return new DepthFirstIterator<>(getGraph(), getInputs());
+    }
+
+    /**
+     * Factory method for creating a new instance of GeneGraph which inputs and nodes are inactive but some of the genes are active at random
+     *
+     * @param containingCellId
+     * @return
+     */
+    public static GeneGraph RandomlyActivatedGraph(int containingCellId) {
+        return new GeneGraph(containingCellId).turnNodesOff().activateGenesAtRandom();
+    }
+
+    private GeneGraph activateGenesAtRandom() {
+        Random r = new Random();
+        for (Node node : getGenes()) {
+            node.setActive(r.nextBoolean());
+        }
+
+        return this;
+    }
+
+    private GeneGraph turnNodesOff() {
+        for (Node node : getNodes()) {
+            node.setActive(false);
+        }
+        return this;
+    }
+
+    private static GraphImporter<Node, GeneLink> createImporter() {
         VertexProvider<Node> vertexProvider = (id, attributes) -> {
             String shape = attributes.get("MY-SHAPE").getValue();
             Node v;
-            if(attributes.containsKey("MY-RULE")) { //it's a gene or a cellular fate
+            if (attributes.containsKey("MY-RULE")) { //it's a gene or a cellular fate
                 String rule = attributes.get("MY-RULE").getValue();
 
-                if(shape.equals("rect")){ //it's a fate
+                if (shape.equals("rect")) { //it's a fate
                     v = new Fate(id, rule);
-                }
-                else{
+                } else {
                     v = new Gene(id, rule);
                 }
-            }
-            else{ //it's an input
+            } else { //it's an input
                 v = new Input(id);
             }
 
