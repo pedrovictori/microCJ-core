@@ -1,7 +1,8 @@
 package core;
 
-import geom.CellDistribution;
+import geom.Distributor;
 import geom.Point3D;
+import geom.RandomRecursiveDistributor;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class Tumor {
 
 	private Set<Point3D> cellLocations;
 	private int initialNumber;
+	private Distributor distributor;
 	/**
 	 * Maximum number of cells in the tumor
 	 */
@@ -17,8 +19,8 @@ public class Tumor {
 
 	public Tumor(int initialNumber, double cellRadius) {
 		this.initialNumber = initialNumber;
-		//cellLocations = CellDistribution.randomPackingAtRegularIntervals(initialNumber, cellRadius);
-		cellLocations = CellDistribution.recursiveRandomPacking(initialNumber, cellRadius);
+		distributor = new RandomRecursiveDistributor(); //todo choose in user settings
+		cellLocations = distributor.populate(initialNumber, cellRadius);
 
 		for (Point3D location : cellLocations) {
 			cellList.add(new Cell(location, cellRadius));
