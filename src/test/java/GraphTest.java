@@ -1,16 +1,73 @@
+/**
+ * @author Pedro Victori
+ */
+/*
+Copyright 2019 Pedro Victori
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
+import core.Gene;
+import core.Input;
 import core.Node;
 import graph.GeneGraph;
 import graph.GeneLink;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.io.*;
+import org.jgrapht.traverse.BreadthFirstIterator;
+import org.jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.traverse.GraphIterator;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GraphTest {
 	public static void main(String[] args) {
 		GeneGraph geneGraph = new GeneGraph(1);
+		iterateBFromInputs(geneGraph);
+	}
 
+	private static void iterateDFromInputs(GeneGraph geneGraph) {
+		int i = 0;
+
+		DepthFirstIterator<Node, GeneLink> iterator = new DepthFirstIterator<>(geneGraph.getGraph(), geneGraph.getInputs());
+		while (iterator.hasNext()) {
+			Node node = iterator.next();
+			System.out.println(i + " " + node.getTag());
+			i++;
+		}
+	}
+
+	private static void iterateRandom(GeneGraph geneGraph) {
+		int i = 0;
+		for (Node node : geneGraph.getGraph().vertexSet()) {
+			System.out.println(i + " " + node.getTag());
+			i++;
+		}
+	}
+
+	private static void iterateBFromInputs(GeneGraph geneGraph) {
+		Node root = new Gene("root"); //todo create type for this
+		geneGraph.getGraph().addVertex(root);
+		for (Node input : geneGraph.getInputs()) {
+			geneGraph.getGraph().addEdge(root, input, new GeneLink(root, input));
+		}
+		int i = 0;
+		BreadthFirstIterator<Node, GeneLink> iterator = new BreadthFirstIterator<>(geneGraph.getGraph(), root);
+		while (iterator.hasNext()) {
+			Node node = iterator.next();
+			System.out.println(i + " " + node.getTag() + " " + iterator.getDepth(node));
+			i++;
+		}
+	}
+
+	private static void printAsDot(GeneGraph geneGraph) {
 		//export and print in DOT format
 		GraphExporter<Node, GeneLink> exporter = createDotExporter();
 		Writer writer = new StringWriter();
