@@ -1,5 +1,5 @@
 package core;
 
 public interface Identifiable {
-    public Integer getId();
+    Integer getId();
 }
