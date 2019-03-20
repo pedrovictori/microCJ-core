@@ -61,4 +61,31 @@ public class Tumor {
 	public int getMaxSize() {
 		return maxSize;
 	}
+
+	public void updateAllCells() {
+		for (Cell cell : cellList) {
+			Fate fate = cell.update();
+			if (fate != null) {
+				fate.getExecutionRule().execute(cell, this);
+			}
+		}
+	}
+
+	/**
+	 * Checks if there is available space next to the cell, if so it creates a copy  of the cell and places it next to the original cell.
+	 * @param cell the original cell to be copied
+	 */
+	void proliferate(Cell cell) {
+		Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
+		if (location != null) {
+			Cell newCell = cell.copy();
+			newCell.setLocation(location);
+			cellList.add(newCell);
+			cellLocations.add(location);
+		}
+	}
+
+	void apoptose(Cell cell) {
+		cellList.remove(cell);
+	}
 }

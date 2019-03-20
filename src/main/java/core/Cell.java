@@ -79,4 +79,22 @@ public class Cell extends Identifier {
     public GeneGraph getGeneGraph() {
         return geneGraph;
     }
+
+    protected void arrest() {
+        //TODO implement
+    }
+
+    protected void necrotize() {
+        //TODO implement
+    }
+
+    Fate update() {
+        getGeneGraph().update();
+        return getGeneGraph().getCurrentlyActiveFate();
+    }
+
+    public Cell copy() {
+        return null;
+        //todo implement
+    }
 }
