@@ -39,6 +39,10 @@ public class FateNode extends Identifier implements InNode{
 		this.rule = Rule.ruleParser(this, rule);
 	}
 
+	public Fate getFate() {
+		return fate;
+	}
+
 	@Override
 	public Rule getRule() {
 		return rule;
