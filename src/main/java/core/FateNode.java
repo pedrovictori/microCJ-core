@@ -12,27 +12,29 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-public class Fate extends Identifier implements InNode{
+public class FateNode extends Identifier implements InNode{
 	private String tag;
 	private boolean active;
 	private Rule rule;
+	private Fate fate;
 
-	public Fate(String tag) {
+	public FateNode(String tag) {
 		this.tag = tag;
+		this.fate = Fate.valueOf(tag.toUpperCase());
 	}
 
-	public Fate(String tag, boolean active) {
+	public FateNode(String tag, boolean active) {
 		this.tag = tag;
 		this.active = active;
 	}
 
-	public Fate(String tag, String rule) {
+	public FateNode(String tag, String rule) {
 		this(tag);
 		this.rule = Rule.ruleParser(this, rule);
 	}
 
 
-	public Fate(String tag, String rule, boolean active) {
+	public FateNode(String tag, String rule, boolean active) {
 		this(tag, active);
 		this.rule = Rule.ruleParser(this, rule);
 	}
