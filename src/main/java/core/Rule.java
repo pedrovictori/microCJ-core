@@ -1,11 +1,21 @@
 package core;
+/**
+ * @author Pedro Victori
+ */
+/*
+Copyright 2019 Pedro Victori
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
 
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import graph.GeneGraph;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Rule {
@@ -17,18 +27,21 @@ public class Rule {
 		this.rule = rule;
 	}
 
-	public boolean checkStatus(GeneGraph geneGraph) {
-		Map<String, Boolean> values = new HashMap<>();
-		for (Node node : geneGraph.getGraph().vertexSet()) {
-			values.put(node.getTag(), node.isActive());
-		}
-
+	public boolean checkStatus(Map<String, Boolean> values) {
 		Expression<String> resolved = RuleSet.assign(rule, values);
 
 		return Boolean.parseBoolean(resolved.toString());
 	}
 
-	public static Rule ruleParser(Node origin, String stringRule) {
+	public Node getOrigin() {
+		return origin;
+	}
+
+	public Expression<String> getRule() {
+		return rule;
+	}
+
+	static Rule ruleParser(Node origin, String stringRule) {
 		//replace all operators with boolean symbols
 		stringRule = stringRule.replace("and", "&")
 				.replace("or", "|")
