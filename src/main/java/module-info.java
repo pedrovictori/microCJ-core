@@ -1,4 +1,4 @@
-module microC2.core {
+module microCJ.core {
     exports graph;
 	exports geom;
 	exports core;
