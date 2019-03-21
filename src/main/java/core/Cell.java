@@ -12,8 +12,13 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
+
 import geom.Point3D;
 import graph.GeneGraph;
+import update.Updatable;
+import update.Update;
+import update.UpdateFlag;
+
 enum CellState{
     NORMAL, //functioning as default
     ARRESTED, //will be unresponsive for an interval of time
@@ -21,7 +26,7 @@ enum CellState{
     DEAD; //is dead and will be removed from the simulation as soon as possible
 }
 
-public class Cell extends Identifier {
+public class Cell extends Identifier implements Updatable {
     private boolean alive = true;
     private int age = 0;
     private GeneGraph geneGraph;
@@ -117,6 +122,7 @@ public class Cell extends Identifier {
     void necrotize() {
         geneGraph = null;
         cellState = CellState.NECROTIC;
+        tryToAddUpdate(UpdateFlag.NECROTIC_CELL);
     }
 
     Fate update() {
@@ -133,6 +139,12 @@ public class Cell extends Identifier {
 
     private void tryToAddUpdate(UpdateFlag flag) {
         try {
+            World.INSTANCE.addToUpdateQueue(new Update<>(flag, this));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Cell copy(Cell cell) {
         return new Cell(cell.getRadius());
     }
