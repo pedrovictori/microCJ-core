@@ -130,8 +130,10 @@ public class Cell extends Identifier {
         }
     }
 
-    public Cell copy() {
-        return null;
-        //todo implement
+
+    private void tryToAddUpdate(UpdateFlag flag) {
+        try {
+    public static Cell copy(Cell cell) {
+        return new Cell(cell.getRadius());
     }
 }

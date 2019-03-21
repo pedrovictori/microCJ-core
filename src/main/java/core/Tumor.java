@@ -76,12 +76,15 @@ public class Tumor {
 	 * @param cell the original cell to be copied
 	 */
 	void proliferate(Cell cell) {
-		Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
-		if (location != null) {
-			Cell newCell = cell.copy();
-			newCell.setLocation(location);
-			cellList.add(newCell);
-			cellLocations.add(location);
+		if(cellList.size() < maxSize){
+			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
+			if (location != null) {
+				Cell newCell = Cell.copy(cell);
+				newCell.setLocation(location);
+				cellList.add(newCell);
+				cellLocations.add(location);
+
+			}
 		}
 	}
 
