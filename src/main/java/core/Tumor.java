@@ -30,13 +30,16 @@ public class Tumor {
 	private Set<Point3D> cellLocations;
 	private int initialNumber;
 	private Distributor distributor;
+	private Point3D center;
 	/**
 	 * Maximum number of cells in the tumor
 	 */
-	private int maxSize; //todo implement
+	private int maxSize;
 
-	public Tumor(int initialNumber, double cellRadius) {
+	public Tumor(int initialNumber, int maxSize, Point3D center, double cellRadius) {
 		this.initialNumber = initialNumber;
+		this.maxSize = maxSize;
+		this.center = center;
 		distributor = new RandomRecursiveDistributor(); //todo choose in user settings
 		cellLocations = distributor.populate(initialNumber, cellRadius);
 
@@ -45,8 +48,12 @@ public class Tumor {
 		}
 	}
 
-	public Tumor(int initialNumber) {
-		this(initialNumber, Cell.getDefaultRadius());
+	public Tumor(int initialNumber, int maxSize, double cellRadius) {
+		this(initialNumber, maxSize, Point3D.ZERO, cellRadius);
+	}
+
+	public Tumor(int initialNumber, int maxSize) {
+		this(initialNumber, maxSize, Cell.getDefaultRadius());
 	}
 
 	public List<Cell> getCellList() {
