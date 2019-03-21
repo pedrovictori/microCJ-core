@@ -14,12 +14,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import geom.Point3D;
 import graph.GeneGraph;
+enum CellState{
+    NORMAL, //functioning as default
+    ARRESTED, //will be unresponsive for an interval of time
+    NECROTIC, //is dead but still occupying space
+    DEAD; //is dead and will be removed from the simulation as soon as possible
+}
 
 public class Cell extends Identifier {
     private boolean alive = true;
     private int age = 0;
     private GeneGraph geneGraph;
     private Point3D location;
+    private CellState cellState = CellState.NORMAL;
+    private int arrestCountdown;
+    private static final int DEFAULT_ARREST_COUNTDOWN = 10;
 
     /**
      * the cell radius
@@ -80,17 +89,40 @@ public class Cell extends Identifier {
         return geneGraph;
     }
 
-    protected void arrest() {
-        //TODO implement
+    private void resetArrestCountdown() {
+        arrestCountdown = DEFAULT_ARREST_COUNTDOWN;
     }
 
-    protected void necrotize() {
-        //TODO implement
+    private void arrestCountdown() {
+        arrestCountdown--;
+        if (arrestCountdown == 0) {
+            cellState = CellState.NORMAL;
+        }
+    }
+
+    private boolean isArrested() {
+       return cellState.equals(CellState.ARRESTED);
+    }
+
+    void arrest() {
+        resetArrestCountdown();
+        cellState = CellState.ARRESTED;
+    }
+
+    void necrotize() {
+        geneGraph = null;
+        cellState = CellState.NECROTIC;
     }
 
     Fate update() {
-        getGeneGraph().update();
-        return getGeneGraph().getCurrentlyActiveFate();
+        if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) return null;
+        else{
+            arrestCountdown();
+            getGeneGraph().update();
+            Fate computedFate = getGeneGraph().getCurrentlyActiveFate();
+            if (computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED)) return Fate.GROWTH_ARREST;
+            else return computedFate;
+        }
     }
 
     public Cell copy() {
