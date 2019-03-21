@@ -46,6 +46,11 @@ public class Cell extends Identifier {
         this.location = location;
     }
 
+    public Cell(double radius) {
+        this();
+        this.radius = radius;
+    }
+
     public Cell(Point3D location, double radius) {
         this(location);
         this.radius = radius;
