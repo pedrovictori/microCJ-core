@@ -16,6 +16,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import geom.Distributor;
 import geom.Point3D;
 import geom.RandomRecursiveDistributor;
+import update.Updatable;
+import update.Update;
+import update.UpdateFlag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,11 +87,21 @@ public class Tumor {
 				cellList.add(newCell);
 				cellLocations.add(location);
 
+				tryToAddCellUpdate(new Update<>(UpdateFlag.NEW_CELL, newCell));
 			}
 		}
 	}
 
 	void apoptose(Cell cell) {
 		cellList.remove(cell);
+		tryToAddCellUpdate(new Update<>(UpdateFlag.DEAD_CELL, cell));
+	}
+
+	private void tryToAddCellUpdate(Update<UpdateFlag, Updatable> update) {
+		try {
+			World.INSTANCE.addToUpdateQueue(update);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
