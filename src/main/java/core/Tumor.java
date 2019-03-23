@@ -20,11 +20,13 @@ import update.Updatable;
 import update.Update;
 import update.UpdateFlag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Collections.synchronizedList;
 
 public class Tumor {
+	private static final int DEFAULT_INITIAL_SIZE = 100;
+	private static final int DEFAULT_MAX_SIZE = 4000;
 	private List<Cell> cellList = new ArrayList<>();
 
 	private Set<Point3D> cellLocations;
@@ -54,6 +56,10 @@ public class Tumor {
 
 	public Tumor(int initialNumber, int maxSize) {
 		this(initialNumber, maxSize, Cell.getDefaultRadius());
+	}
+
+	public Tumor() {
+		this(DEFAULT_INITIAL_SIZE, DEFAULT_MAX_SIZE);
 	}
 
 	public List<Cell> getCellList() {
