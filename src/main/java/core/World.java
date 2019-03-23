@@ -35,7 +35,7 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 	 * @return an int with the number of updates remaining in the UpdateQueue
 	 */
 	public int getRemainingGuiUpdates() {
-		return updateQueue.size();
+		return guiUpdateQueue.size();
 	}
 
 	/**
@@ -50,7 +50,7 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 		return tumor;
 	}
 
-	public synchronized void update() {
+	public void update() {
 		tumor.updateAllCells();
 	}
 

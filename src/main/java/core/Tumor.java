@@ -76,20 +76,13 @@ public class Tumor {
 		return maxSize;
 	}
 
-	public synchronized void updateAllCells() {
-		int celli = 0;
-		System.out.println("size " + cellList.size());
-		List<Cell> syncList = Collections.synchronizedList(cellList);
-		synchronized (syncList) {
-			Iterator<Cell> iterator = syncList.iterator();
-			while (iterator.hasNext()) {
-				Cell cell = iterator.next();
+	public void updateAllCells() {
+		for (Cell cell : cellList) {
 				Fate fate = cell.update();
 				if (fate != null) {
 					fate.getExecutionRule().execute(cell, this);
 				}
-				System.out.println("cell " + celli++);
-			}
+
 		}
 
 		while (World.INSTANCE.getRemainingUpdates() > 0) { //make the necessary changes to the cell list.
@@ -125,7 +118,6 @@ public class Tumor {
 	}
 
 	void apoptose(Cell cell) {
-		cellList.remove(cell);
 		tryToAddCellUpdate(new Update<>(UpdateFlag.DEAD_CELL, cell));
 	}
 
