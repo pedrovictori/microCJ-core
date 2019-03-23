@@ -139,7 +139,7 @@ public class Cell extends Identifier implements Updatable {
 
     private void tryToAddUpdate(UpdateFlag flag) {
         try {
-            World.INSTANCE.addToUpdateQueue(new Update<>(flag, this));
+            World.INSTANCE.addToUpdateQueues(new Update<>(flag, this));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

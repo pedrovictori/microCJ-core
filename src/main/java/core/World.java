@@ -14,6 +14,7 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 
 	private Tumor tumor;
 	private BlockingQueue<Update<UpdateFlag, Updatable>> updateQueue = new PriorityBlockingQueue<>();
+	private BlockingQueue<Update<UpdateFlag, Updatable>> guiUpdateQueue = new PriorityBlockingQueue<>();
 	private PaceMaker paceMaker;
 
 	World() {
@@ -30,10 +31,18 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 	}
 
 	/**
+	 * Get the number of updates in the GUI UpdateQueue
+	 * @return an int with the number of updates remaining in the UpdateQueue
+	 */
+	public int getRemainingGuiUpdates() {
+		return updateQueue.size();
+	}
+
+	/**
 	 * Get the number of updates in the UpdateQueue
 	 * @return an int with the number of updates remaining in the UpdateQueue
 	 */
-	public int getRemainingUpdates() {
+	int getRemainingUpdates() {
 		return updateQueue.size();
 	}
 
@@ -50,16 +59,26 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 	 * The head will be the element with the highest UpdateFlag priority
 	 * @return an Update that has been removed from the head of the update queue or null if no available updates.
 	 */
-	public Update<UpdateFlag, Updatable> getUpdateFromQueue() {
+	Update<UpdateFlag, Updatable> getUpdateFromQueue() {
 		return updateQueue.poll();
 	}
 
 	/**
-	 * Inserts the specified update into the queue, waiting if necessary for space to become available.
+	 * Retrieves and removes the head of the GUI update queue, or returns null if there are not available updates.
+	 * The head will be the element with the highest UpdateFlag priority
+	 * @return an Update that has been removed from the head of the GUI update queue or null if no available updates.
+	 */
+	public Update<UpdateFlag, Updatable> getUpdateFromGuiQueue() {
+		return guiUpdateQueue.poll();
+	}
+
+	/**
+	 * Inserts the specified update into the queues, waiting if necessary for space to become available.
 	 * @param update
 	 * @throws InterruptedException
 	 */
-	public void addToUpdateQueue(Update<UpdateFlag, Updatable> update) throws InterruptedException {
+	void addToUpdateQueues(Update<UpdateFlag, Updatable> update) throws InterruptedException {
 		updateQueue.put(update);
+		guiUpdateQueue.put(update);
 	}
 }

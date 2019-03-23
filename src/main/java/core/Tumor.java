@@ -22,8 +22,6 @@ import update.UpdateFlag;
 
 import java.util.*;
 
-import static java.util.Collections.synchronizedList;
-
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
 	private static final int DEFAULT_MAX_SIZE = 4000;
@@ -93,6 +91,21 @@ public class Tumor {
 				System.out.println("cell " + celli++);
 			}
 		}
+
+		while (World.INSTANCE.getRemainingUpdates() > 0) { //make the necessary changes to the cell list.
+			Update<UpdateFlag, Updatable> update = World.INSTANCE.getUpdateFromQueue();
+			switch (update.getFlag()) {
+				case DEAD_CELL:
+					cellList.remove((Cell) update.getUpdatable());
+					break;
+				case NECROTIC_CELL:
+					//nothing to do
+					break;
+				case NEW_CELL:
+					cellList.add((Cell) update.getUpdatable());
+					break;
+			}
+		}
 	}
 
 	/**
@@ -105,9 +118,7 @@ public class Tumor {
 			if (location != null) { //if there's free space next to this cell
 				Cell newCell = Cell.copy(cell);
 				newCell.setLocation(location);
-				cellList.add(newCell);
 				cellLocations.add(location);
-
 				tryToAddCellUpdate(new Update<>(UpdateFlag.NEW_CELL, newCell));
 			}
 		}
@@ -120,7 +131,7 @@ public class Tumor {
 
 	private void tryToAddCellUpdate(Update<UpdateFlag, Updatable> update) {
 		try {
-			World.INSTANCE.addToUpdateQueue(update);
+			World.INSTANCE.addToUpdateQueues(update);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
