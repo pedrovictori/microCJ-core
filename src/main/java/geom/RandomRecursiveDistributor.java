@@ -24,7 +24,7 @@ public class RandomRecursiveDistributor implements Distributor{
 		points.add(Point3D.ZERO);
 		Random r = new Random();
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 1; i < n; i++) {
 			Point3D element = findEmptyCenter(cellRadius*2, points.iterator().next(), points, cellRadius, r);
 			points.add(element);
 		}
