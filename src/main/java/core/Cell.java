@@ -1,7 +1,4 @@
 package core;
-/**
- * @author Pedro Victori
- */
 /*
 Copyright 2019 Pedro Victori
 
@@ -25,7 +22,10 @@ enum CellState{
     NECROTIC, //is dead but still occupying space
     DEAD; //is dead and will be removed from the simulation as soon as possible
 }
-
+/**
+ * Base class for Cell objects.
+ * @author Pedro Victori
+ */
 public class Cell extends Identifier implements Updatable {
     private boolean alive = true;
     private int age = 0;
@@ -131,7 +131,7 @@ public class Cell extends Identifier implements Updatable {
             arrestCountdown();
             getGeneGraph().update();
             Fate computedFate = getGeneGraph().getCurrentlyActiveFate();
-            if (computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED)) return Fate.GROWTH_ARREST;
+            if ((computedFate != null) && (computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED))) return Fate.GROWTH_ARREST;
             else return computedFate;
         }
     }
