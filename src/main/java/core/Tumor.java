@@ -78,11 +78,19 @@ public class Tumor {
 		return maxSize;
 	}
 
-	public void updateAllCells() {
-		for (Cell cell : cellList) {
-			Fate fate = cell.update();
-			if (fate != null) {
-				fate.getExecutionRule().execute(cell, this);
+	public synchronized void updateAllCells() {
+		int celli = 0;
+		System.out.println("size " + cellList.size());
+		List<Cell> syncList = Collections.synchronizedList(cellList);
+		synchronized (syncList) {
+			Iterator<Cell> iterator = syncList.iterator();
+			while (iterator.hasNext()) {
+				Cell cell = iterator.next();
+				Fate fate = cell.update();
+				if (fate != null) {
+					fate.getExecutionRule().execute(cell, this);
+				}
+				System.out.println("cell " + celli++);
 			}
 		}
 	}
@@ -94,7 +102,7 @@ public class Tumor {
 	void proliferate(Cell cell) {
 		if(cellList.size() < maxSize){
 			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
-			if (location != null) {
+			if (location != null) { //if there's free space next to this cell
 				Cell newCell = Cell.copy(cell);
 				newCell.setLocation(location);
 				cellList.add(newCell);
