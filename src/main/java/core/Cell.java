@@ -42,7 +42,7 @@ public class Cell extends Identifier implements Updatable {
     private final static double DEFAULT_RADIUS = 5;
 
     public Cell() {
-        geneGraph = GeneGraph.RandomlyActivatedGraph(getId());
+        geneGraph = GeneGraph.RandomlyActivatedGraph(getId()).turnNode("Oxygen_supply", true); //turn oxygen on to avoid necrosis while oxygen diffusion gets implemented todo remove this when no longer necessary
         radius = DEFAULT_RADIUS;
     }
 
