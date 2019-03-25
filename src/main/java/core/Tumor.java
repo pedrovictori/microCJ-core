@@ -89,6 +89,7 @@ public class Tumor {
 			Update<UpdateFlag, Updatable> update = World.INSTANCE.getUpdateFromQueue();
 			switch (update.getFlag()) {
 				case DEAD_CELL:
+					cellLocations.remove(((Cell) update.getUpdatable()).getLocation()); //This is done after new cells have already been located, so the order in which cells are looped doesn't matter
 					cellList.remove((Cell) update.getUpdatable());
 					break;
 				case NECROTIC_CELL:
