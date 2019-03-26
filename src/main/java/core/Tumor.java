@@ -109,7 +109,10 @@ public class Tumor {
 	 */
 	void proliferate(Cell cell) {
 		if(cellList.size() < maxSize){
-			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
+			/* create a copy to iterate over in the next method in a thread-safe way
+			 * todo come back to this as other ways to achieve thread safety might be more efficient */
+			Set<Point3D> cellLocationsCopy = new HashSet<>(cellLocations);
+			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocationsCopy);
 			if (location != null) { //if there's free space next to this cell
 				Cell newCell = Cell.copy(cell);
 				newCell.setLocation(location);
