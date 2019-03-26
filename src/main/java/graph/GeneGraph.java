@@ -28,7 +28,6 @@ public class GeneGraph {
 	private List<Node> nodes;
 	private Map<String, Boolean> currentValues = new HashMap<>();
 	Map<Node, Boolean> nextUpdate = new HashMap<>();
-	private Fate currentlyActiveFate;
 
 	public GeneGraph(int containingCellId) {
 		this.containingCellId = containingCellId;
@@ -41,10 +40,6 @@ public class GeneGraph {
 			importer.importGraph(graph, graphFile);
 		} catch (ImportException e) {
 			e.printStackTrace();
-		}
-
-		for (Node node : getGraph().vertexSet()) {
-
 		}
 	}
 
@@ -95,43 +90,34 @@ public class GeneGraph {
 	}
 
 	/**
-	 * When called, update the whole gene network.
+	 * When called, update the whole gene network and return the fate reached.
+	 * @return The last Fate to be reached, or NO_FATE_REACHED if none reached
 	 */
-	public void update(){
-		/*update all the nodes with the map generated in the last update step
-		 *Then, update the map with all the current values of every node, to use them as reference for the next computing of the activation rules.
-		 */
+	public Fate update(){
+		Fate fate = Fate.NO_FATE_REACHED; //if this run doesn't reach a fate, the method will return this.
+		//update all the nodes with the map generated in the last update step. Check map is not empty in case this is the first run.
 		for (Node node : getNodes()) {
 			if (!nextUpdate.isEmpty() && node instanceof InNode) {
 				node.setActive(nextUpdate.get(node));
 			}
+
+			//Then, update the map with all the current values. This needs to be done even in the first run.
 			currentValues.put(node.getTag(), node.isActive());
 
-			//store the first activated Fate TODO what happens if several Fates get activated in the same step?
+			//store the last Fate to be reached TODO what happens if several Fates get activated in the same step?
 			if (node.isActive() && node instanceof FateNode) {
-				setCurrentlyActiveFate(((FateNode)node).getFate());
+				fate = ((FateNode)node).getFate();
 			}
 		}
 
-		//generate a map with all the projected values after the update. First compute them and then use the map to update all of them, so the query order doesn't matter
+		//generate a map with all the projected values after the update. Each rule takes as parameter a map with the current state of every node, which was generated in the loop above.
 		for (Node node : getNodes()) {
 			if (node instanceof InNode){//if it is not an input
 				InNode in = (InNode) node;
 				nextUpdate.put(in, in.getRule().checkStatus(currentValues));
 			}
 		}
-	}
-
-	private void setCurrentlyActiveFate(Fate currentlyActiveFate) {
-		this.currentlyActiveFate = currentlyActiveFate;
-	}
-
-	/**
-	 * Returns the Fate activated in the last update step, null if no Fates were activated
-	 * @return an active Fate or null if no active Fates are present
-	 */
-	public Fate getCurrentlyActiveFate() {
-		return currentlyActiveFate;
+		return fate;
 	}
 
 	/**

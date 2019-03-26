@@ -15,7 +15,8 @@ public enum Fate {
 	NECROSIS((cell, tumor) -> {
 		cell.necrotize();
 
-	});
+	}),
+	NO_FATE_REACHED(((cell, tumor) -> {}));
 
 	private FateExecution executionRule;
 

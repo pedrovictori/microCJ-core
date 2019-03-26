@@ -43,6 +43,7 @@ public class Cell extends Identifier implements Updatable {
 
     public Cell() {
         geneGraph = GeneGraph.RandomlyActivatedGraph(getId()).turnNode("Oxygen_supply", true); //turn oxygen on to avoid necrosis while oxygen diffusion gets implemented todo remove this when no longer necessary
+        geneGraph.update(); //update to map the nodes current state in this first run (see GeneGraph.update method body)
         radius = DEFAULT_RADIUS;
     }
 
@@ -126,12 +127,11 @@ public class Cell extends Identifier implements Updatable {
     }
 
     Fate update() {
-        if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) return null;
+        if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) return Fate.NO_FATE_REACHED; //no fate to execute if cell is dead
         else{
-            arrestCountdown();
-            getGeneGraph().update();
-            Fate computedFate = getGeneGraph().getCurrentlyActiveFate();
-            if ((computedFate != null) && (computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED))) return Fate.GROWTH_ARREST;
+            arrestCountdown(); //do this before returning a fate in case the cell goes back to normal in this update step
+            Fate computedFate = getGeneGraph().update();
+            if ((computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED))) return Fate.GROWTH_ARREST;
             else return computedFate;
         }
     }
