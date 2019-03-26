@@ -13,6 +13,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import core.*;
+import mutations.MutationGroup;
+import mutations.MutationValue;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.io.*;
@@ -28,6 +30,7 @@ public class GeneGraph {
 	private List<Node> nodes;
 	private Map<String, Boolean> currentValues = new HashMap<>();
 	Map<Node, Boolean> nextUpdate = new HashMap<>();
+	private Map<Node, MutationValue> mutations = new HashMap<>();
 
 	public GeneGraph(int containingCellId) {
 		this.containingCellId = containingCellId;
@@ -112,7 +115,18 @@ public class GeneGraph {
 
 		//generate a map with all the projected values after the update. Each rule takes as parameter a map with the current state of every node, which was generated in the loop above.
 		for (Node node : getNodes()) {
-			if (node instanceof InNode){//if it is not an input
+			if (mutations.containsKey(node)) { //if this node is mutated
+				MutationValue mut = mutations.get(node);
+				switch (mut) {
+					case ACTIVATE:
+						break;
+					case DEACTIVATE:
+						break;
+					case NO_EFFECT:
+						break;
+				}
+			}
+			else if (node instanceof InNode){//if it is not an input
 				InNode in = (InNode) node;
 				nextUpdate.put(in, in.getRule().checkStatus(currentValues));
 			}
@@ -181,6 +195,11 @@ public class GeneGraph {
 		}
 	}
 
+
+	public void applyMutation(Node node, MutationValue value) {
+		mutations.put(node, value);
+	}
+
 	private static GraphImporter<Node, GeneLink> createImporter() {
 		VertexProvider<Node> vertexProvider = (id, attributes) -> {
 			String shape = attributes.get("MY-SHAPE").getValue();
@@ -210,5 +229,4 @@ public class GeneGraph {
 		importer.setSchemaValidation(false); //todo check later as possible bug source
 		return importer;
 	}
-
 }
