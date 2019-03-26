@@ -21,6 +21,8 @@ import update.Update;
 import update.UpdateFlag;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
@@ -77,19 +79,18 @@ public class Tumor {
 	}
 
 	public void updateAllCells() {
-		for (Cell cell : cellList) {
-				Fate fate = cell.update();
-				if (fate != null) {
-					fate.getExecutionRule().execute(cell, this);
-				}
+		cellList.parallelStream().forEach(cell -> cell.update().getExecutionRule().execute(cell, this));
 
-		}
-
-		while (World.INSTANCE.getRemainingUpdates() > 0) { //make the necessary changes to the cell list.
+		/*
+		* Make the necessary changes to the cell list.
+		* Doing it after the update step guarantees that there are not co-modification issues and the updating order doesn't matter
+		 */
+		while (World.INSTANCE.getRemainingUpdates() > 0) {
 			Update<UpdateFlag, Updatable> update = World.INSTANCE.getUpdateFromQueue();
 			switch (update.getFlag()) {
 				case DEAD_CELL:
-					cellLocations.remove(((Cell) update.getUpdatable()).getLocation()); //This is done after new cells have already been located, so the order in which cells are looped doesn't matter
+					//This is done after new cells have already been located, so the order in which cells are looped doesn't matter
+					cellLocations.remove(((Cell) update.getUpdatable()).getLocation());
 					cellList.remove((Cell) update.getUpdatable());
 					break;
 				case NECROTIC_CELL:
