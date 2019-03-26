@@ -18,17 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PaceMaker {
 	/**
 	 * Default interval between steps, in milliseconds
 	 */
-	private static final long DEFAULT_INTERVAL = 1000;
+	private static final long DEFAULT_INTERVAL = 500;
+	private static final int THREAD_POOL_SIZE = 1; //right now only one clock task will be spawned at the same time.
 	private long interval;
 	private int step = 0;
 	private List<Timed> listeners = new ArrayList<>();
-	private volatile boolean nextStepReady = true;
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
 
 	public PaceMaker(long interval) {
 		this.interval = interval;
@@ -41,26 +44,18 @@ public class PaceMaker {
 	public void startClock(long delay) {
 		Timer timer = new Timer("clock", true);
 
-		TimerTask clockTask = new TimerTask() {
+		Runnable clock = () -> {
+			System.out.println("step " + step);
 
-			@Override
-			public void run() {
-				if(nextStepReady) {
-					nextStepReady = false;
-					System.out.println("step " + step);
-
-					World.INSTANCE.update();
-					step++;
-					for (Timed task : listeners) {
-						task.run();
-					}
-					System.out.println("finished " + step);
-					nextStepReady = true;
-				}
+			World.INSTANCE.update();
+			step++;
+			for (Timed task : listeners) {
+				task.run();
 			}
+			System.out.println("finished " + step);
 		};
 
-		timer.schedule(clockTask, delay, interval); //miliseconds
+		scheduler.scheduleAtFixedRate(clock, delay, delay, TimeUnit.MILLISECONDS);
 	}
 
 	public void startClock() {
