@@ -12,9 +12,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import geom.Point3D;
 import graph.GeneGraph;
+import mutations.MutationGroup;
+import mutations.MutationValue;
 import update.Updatable;
 import update.Update;
 import update.UpdateFlag;
+
+import java.util.Optional;
 
 enum CellState{
     NORMAL, //functioning as default
@@ -40,6 +44,7 @@ public class Cell extends Identifier implements Updatable {
      */
     private double radius;
     private final static double DEFAULT_RADIUS = 5;
+    private MutationGroup mutationGroup;
 
     public Cell() {
         geneGraph = GeneGraph.RandomlyActivatedGraph(getId()).turnNode("Oxygen_supply", true); //turn oxygen on to avoid necrosis while oxygen diffusion gets implemented todo remove this when no longer necessary
@@ -62,6 +67,33 @@ public class Cell extends Identifier implements Updatable {
         this.radius = radius;
     }
 
+    /**
+     * Return the cell's mutation group inside an Optional. It is possible for the cell to not have a mutation group, in which case it behaves as a wild type cell.
+     * @return an Optional MutationGroup
+     */
+    Optional<MutationGroup> getMutationGroup() {
+        return Optional.of(mutationGroup);
+    }
+
+    /**
+     * Sets the cell's mutation group and applies its mutations to the cell's gene graph.
+     * @param mutationGroup the new mutation group for the cell.
+     */
+    void setMutationGroup(MutationGroup mutationGroup) {
+        for (Node node : mutationGroup.getMutations().keySet()) {
+            applyMutation(node, mutationGroup.getMutations().get(node));
+        }
+        this.mutationGroup = mutationGroup;
+    }
+
+    /**
+     * Applies a mutation to the gene graph. Mutations are permanent changes in the activation status of a node.
+     * @param node the node to which the mutation will be applied
+     * @param value the type of mutation: a positive int means activation, a negative int means deactivation and a zero means no effect (wild type).
+     */
+    void applyMutation(Node node, MutationValue value) {
+        getGeneGraph().applyMutation(node, value);
+    }
 
 
     public static double getDefaultRadius() {
