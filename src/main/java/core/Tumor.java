@@ -16,14 +16,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import geom.Distributor;
 import geom.Point3D;
 import geom.RandomRecursiveDistributor;
+import graph.MutationGroup;
 import update.Updatable;
 import update.Update;
 import update.UpdateFlag;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
@@ -34,6 +32,7 @@ public class Tumor {
 	private int initialNumber;
 	private Distributor distributor;
 	private Point3D center;
+	private List<String> mutationGroupsNames = new ArrayList<>();
 	/**
 	 * Maximum number of cells in the tumor
 	 */
@@ -43,11 +42,31 @@ public class Tumor {
 		this.initialNumber = initialNumber;
 		this.maxSize = maxSize;
 		this.center = center;
+
+		//determine the location for every cell
 		distributor = new RandomRecursiveDistributor(); //todo choose in user settings
 		cellLocations = distributor.populate(initialNumber, cellRadius);
 
-		for (Point3D location : cellLocations) {
+		for (Point3D location : cellLocations) { //create all initial cells
 			cellList.add(new Cell(location, cellRadius));
+		}
+
+		//parse the mutation groups
+		Map<MutationGroup, Double> mutationGroups = MutationGroup.parseMutationsFile("mutations.csv"); //todo choose file name in user settings
+
+		//put all cells from cell list into a queue to wait to receive their mutation group
+		Queue<Cell> cellsWaitingForGroup = new LinkedList<>(cellList);
+
+		//for every mutation group, assign it to the specified percentage of cells
+		for (MutationGroup mutationGroup : mutationGroups.keySet()) {
+			mutationGroupsNames.add(mutationGroup.getName());
+			Double percentage = mutationGroups.get(mutationGroup);
+			int cellsInThisGroup = (int) Math.ceil((initialNumber * percentage)/100);
+			for (int i = 0; i < cellsInThisGroup; i++) {
+				Cell nextCell = cellsWaitingForGroup.poll();
+				if (nextCell == null) break; //nextCell will be null if the queue was empty, so we can finish the loop
+				nextCell.setMutationGroup(mutationGroup);
+			}
 		}
 	}
 
