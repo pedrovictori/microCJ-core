@@ -72,7 +72,15 @@ public class Cell extends Identifier implements Updatable {
      * @return an Optional MutationGroup
      */
     Optional<MutationGroup> getMutationGroup() {
-        return Optional.of(mutationGroup);
+        return Optional.ofNullable(mutationGroup);
+    }
+
+    /**
+     * Return the cell's mutation group name inside an Optional. It is possible for the cell to not have a mutation group, in which case it behaves as a wild type cell.
+     * @return an Optional String
+     */
+    public Optional<String> getMutationGroupName() {
+        return getMutationGroup().map(x -> x.getName());
     }
 
     /**
@@ -88,7 +96,7 @@ public class Cell extends Identifier implements Updatable {
 
     /**
      * Applies a mutation to the gene graph. Mutations are permanent changes in the activation status of a node.
-     * @param node the node to which the mutation will be applied
+     * @param tag the tag of the node to which the mutation will be applied
      * @param value the type of mutation: true means activation, false means deactivation and null means no effect (wild type).
      */
     void applyMutation(String tag, Boolean value) {
