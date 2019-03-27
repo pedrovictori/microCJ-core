@@ -4,6 +4,7 @@ import core.Fate;
 import core.Identifier;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Pedro Victori
@@ -23,6 +24,7 @@ public class FateNode extends Identifier implements Node{
 	private boolean active;
 	private Rule rule;
 	private Fate fate;
+	private Boolean mutation; //optional, can be null
 
 	public FateNode(String tag) {
 		this.tag = tag;
@@ -67,6 +69,19 @@ public class FateNode extends Identifier implements Node{
 	@Override
 	public boolean computeState(Map<String, Boolean> values) {
 		return rule.computeRule(values);
+	}
+
+	@Override
+	public void applyMutation(Boolean value) {
+		mutation = value;
+	}
+
+	/**
+	 * Returns an Optional with a Boolean value that might be null. true means activation, false deactivation, null no effect (wild type).
+	 * @return An empty Optional or an Optional containing a Boolean value.
+	 */
+	Optional<Boolean> getMutation() {
+		return Optional.ofNullable(mutation);
 	}
 
 	@Override

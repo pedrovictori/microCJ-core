@@ -1,4 +1,6 @@
-package core;
+package graph;
+
+import core.Identifier;
 
 import java.util.Map;
 
@@ -45,6 +47,11 @@ public class Input extends Identifier implements Node{
 	@Override
 	public boolean computeState(Map<String, Boolean> values) { //this method is here just to comply with the Node interface, but it does nothing.
 		return isActive(); //Nothing to compute, the logic of the network can't affect the activation status of an input node (only external signals can).
+	}
+
+	@Override
+	public void applyMutation(Boolean value) {
+		//do  nothing, inputs don't mutate.
 	}
 
 	@Override

@@ -177,7 +177,7 @@ public class GeneGraph {
 
 
 	public void applyMutation(Node node, Boolean value) {
-		mutations.put(node, value);
+		node.applyMutation(value);
 	}
 
 	private static GraphImporter<Node, GeneLink> createImporter() {

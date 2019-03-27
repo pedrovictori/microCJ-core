@@ -61,9 +61,7 @@ public class Gene extends Identifier implements Node {
     @Override
     public boolean computeState(Map<String, Boolean> values) {
         boolean result = rule.computeRule(values);
-
-        getMutation().ifPresent(aBoolean -> result = aBoolean);
-        return result;
+        return getMutation().orElse(result); //returns the mutation if present, the computed result otherwise
     }
 
     @Override
