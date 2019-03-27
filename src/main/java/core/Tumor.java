@@ -79,6 +79,10 @@ public class Tumor {
 		return maxSize;
 	}
 
+	public List<String> getMutationGroupsNames() {
+		return mutationGroupsNames;
+	}
+
 	public void updateAllCells() {
 		cellList.parallelStream().forEach(cell -> cell.update().getExecutionRule().execute(cell, this));
 
