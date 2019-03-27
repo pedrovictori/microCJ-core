@@ -6,4 +6,5 @@ module microCJ.core {
 	requires org.jgrapht.core;
     requires org.jgrapht.io;
     requires jbool.expressions;
+	requires commons.csv;
 }

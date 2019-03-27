@@ -26,7 +26,7 @@ public class PaceMaker {
 	/**
 	 * Default interval between steps, in milliseconds
 	 */
-	private static final long DEFAULT_INTERVAL = 500;
+	private static final long DEFAULT_INTERVAL = 300;
 	private static final int THREAD_POOL_SIZE = 1; //right now only one clock task will be spawned at the same time.
 	private long interval;
 	private int step = 0;

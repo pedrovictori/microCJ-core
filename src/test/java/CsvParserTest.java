@@ -40,6 +40,7 @@ public class CsvParserTest {
 			System.out.println(record.get(0));
 			System.out.println(record.get(1));
 			System.out.println(record.get(2));
+			System.out.println(record.get(3));
 
 		}
 	}
