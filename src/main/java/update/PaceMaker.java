@@ -32,6 +32,7 @@ public class PaceMaker {
 	private int step = 0;
 	private List<Timed> listeners = new ArrayList<>();
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(THREAD_POOL_SIZE);
+	private boolean pauseRequested = false;
 
 	public PaceMaker(long interval) {
 		this.interval = interval;
@@ -42,17 +43,21 @@ public class PaceMaker {
 	}
 
 	public void startClock(long delay) {
+		pauseRequested = false;
+		interval = delay;
 		Timer timer = new Timer("clock", true);
 
 		Runnable clock = () -> {
-			System.out.println("step " + step);
+			if(!hasPauseBeenRequested()) {
+				System.out.println("step " + step);
 
-			World.INSTANCE.update();
-			step++;
-			for (Timed task : listeners) {
-				task.run();
+				World.INSTANCE.update();
+				step++;
+				for (Timed task : listeners) {
+					task.run();
+				}
+				System.out.println("finished " + step);
 			}
-			System.out.println("finished " + step);
 		};
 
 		scheduler.scheduleAtFixedRate(clock, delay, delay, TimeUnit.MILLISECONDS);
@@ -62,11 +67,22 @@ public class PaceMaker {
 		startClock(interval);
 	}
 
+	public synchronized void requestPause() {
+		pauseRequested = true;
+	}
+
+	private synchronized boolean hasPauseBeenRequested() {
+		return pauseRequested;
+	}
 	/**
 	 * Adds a listener to the step counter. Whenever a new step is executed, the given task will be executed as well.
 	 * @param task the task that will be executed every step.
 	 */
 	public void addListener(Timed task) {
 		listeners.add(task);
+	}
+
+	public int getStep() {
+		return step;
 	}
 }
