@@ -186,6 +186,8 @@ public class Cell extends Identifier implements Updatable {
     }
 
     public static Cell copy(Cell cell) {
-        return new Cell(cell.getRadius());
+       Cell copy = new Cell(cell.getRadius());
+       copy.setMutationGroup(cell.getMutationGroup().orElse(null));
+       return copy;
     }
 }
