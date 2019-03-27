@@ -168,6 +168,7 @@ public class Cell extends Identifier implements Updatable {
     }
 
     Fate update() {
+        age++;
         if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) lastActivatedFate = Fate.NO_FATE_REACHED; //no fate to execute if cell is dead
         else{
             arrestCountdown(); //do this before returning a fate in case the cell goes back to normal in this update step
@@ -189,7 +190,7 @@ public class Cell extends Identifier implements Updatable {
     }
 
     public String getInfo() {
-        return "Cell " + Integer.toString(getId()) +
+        return "Cell " + Integer.toString(getId()) + ". Age: " + age +
                 " State: " + cellState.toString() + ". Last activated fate: " + lastActivatedFate.toString() +
                 " Mutation group: " + getMutationGroupName().orElse("none");
     }
