@@ -25,6 +25,9 @@ public enum World { //this is an enum to ensure it remains a singleton: one and 
 	public void start() {
 		paceMaker.startClock();
 	}
+	public void pause() {
+		paceMaker.requestPause();
+	}
 
 	public PaceMaker getPaceMaker() {
 		return paceMaker;

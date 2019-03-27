@@ -38,6 +38,7 @@ public class Cell extends Identifier implements Updatable {
     private CellState cellState = CellState.NORMAL;
     private int arrestCountdown;
     private static final int DEFAULT_ARREST_COUNTDOWN = 10;
+    private Fate lastActivatedFate;
 
     /**
      * the cell radius
@@ -167,13 +168,15 @@ public class Cell extends Identifier implements Updatable {
     }
 
     Fate update() {
-        if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) return Fate.NO_FATE_REACHED; //no fate to execute if cell is dead
+        if (cellState.equals(CellState.NECROTIC) || cellState.equals(CellState.DEAD)) lastActivatedFate = Fate.NO_FATE_REACHED; //no fate to execute if cell is dead
         else{
             arrestCountdown(); //do this before returning a fate in case the cell goes back to normal in this update step
             Fate computedFate = getGeneGraph().update();
-            if ((computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED))) return Fate.GROWTH_ARREST;
-            else return computedFate;
+            if ((computedFate.equals(Fate.PROLIFERATION) && cellState.equals(CellState.ARRESTED))) lastActivatedFate = Fate.GROWTH_ARREST;
+            else return lastActivatedFate = computedFate;
         }
+
+        return lastActivatedFate;
     }
 
 
@@ -185,7 +188,15 @@ public class Cell extends Identifier implements Updatable {
         }
     }
 
+    public String getInfo() {
+        return "Cell " + Integer.toString(getId()) +
+                " State: " + cellState.toString() + ". Last activated fate: " + lastActivatedFate.toString() +
+                " Mutation group: " + getMutationGroupName().orElse("none");
+    }
+
     public static Cell copy(Cell cell) {
-        return new Cell(cell.getRadius());
+       Cell copy = new Cell(cell.getRadius());
+       copy.setMutationGroup(cell.getMutationGroup().orElse(null));
+       return copy;
     }
 }
