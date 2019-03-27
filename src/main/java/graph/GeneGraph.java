@@ -176,8 +176,8 @@ public class GeneGraph {
 	}
 
 
-	public void applyMutation(Node node, Boolean value) {
-		node.applyMutation(value);
+	public void applyMutation(String tag, Boolean value) {
+		findNodeWithTag(tag).applyMutation(value);
 	}
 
 	private static GraphImporter<Node, GeneLink> createImporter() {

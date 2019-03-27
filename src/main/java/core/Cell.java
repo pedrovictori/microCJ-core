@@ -80,8 +80,8 @@ public class Cell extends Identifier implements Updatable {
      * @param mutationGroup the new mutation group for the cell.
      */
     void setMutationGroup(MutationGroup mutationGroup) {
-        for (Node node : mutationGroup.getMutations().keySet()) {
-            applyMutation(node, mutationGroup.getMutations().get(node));
+        for (String tag : mutationGroup.getMutations().keySet()) {
+            applyMutation(tag, mutationGroup.getMutations().get(tag));
         }
         this.mutationGroup = mutationGroup;
     }
@@ -91,8 +91,8 @@ public class Cell extends Identifier implements Updatable {
      * @param node the node to which the mutation will be applied
      * @param value the type of mutation: true means activation, false means deactivation and null means no effect (wild type).
      */
-    void applyMutation(Node node, Boolean value) {
-        getGeneGraph().applyMutation(node, value);
+    void applyMutation(String tag, Boolean value) {
+        getGeneGraph().applyMutation(tag, value);
     }
 
 
