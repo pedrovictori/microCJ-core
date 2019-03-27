@@ -1,8 +1,5 @@
-package mutations;
+package graph;
 
-import core.Node;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,9 +16,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 public class MutationGroup {
 	String name;
-	Map<Node, MutationValue> mutations; //a map with pairs of nodes and integers. A negative int means deactivation, zero means no effect (wild type) and a positive int means activation
+	Map<Node, Boolean> mutations; //a map with pairs of nodes and integers. A negative int means deactivation, zero means no effect (wild type) and a positive int means activation
 
-	public MutationGroup(String name, Map<Node, MutationValue> mutations) {
+	public MutationGroup(String name, Map<Node, Boolean> mutations) {
 		this.name = name;
 		this.mutations = mutations;
 	}
@@ -30,7 +27,7 @@ public class MutationGroup {
 		return name;
 	}
 
-	public Map<Node, MutationValue> getMutations() {
+	public Map<Node, Boolean> getMutations() {
 		return mutations;
 	}
 }

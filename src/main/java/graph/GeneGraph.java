@@ -28,7 +28,6 @@ public class GeneGraph {
 	private List<Node> nodes;
 	private Map<String, Boolean> currentValues = new HashMap<>();
 	Map<Node, Boolean> nextUpdate = new HashMap<>();
-	private Map<Node, MutationValue> mutations = new HashMap<>();
 
 	public GeneGraph(int containingCellId) {
 		this.containingCellId = containingCellId;
@@ -177,7 +176,7 @@ public class GeneGraph {
 	}
 
 
-	public void applyMutation(Node node, MutationValue value) {
+	public void applyMutation(Node node, Boolean value) {
 		mutations.put(node, value);
 	}
 

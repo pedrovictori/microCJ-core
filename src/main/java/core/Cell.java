@@ -89,9 +89,9 @@ public class Cell extends Identifier implements Updatable {
     /**
      * Applies a mutation to the gene graph. Mutations are permanent changes in the activation status of a node.
      * @param node the node to which the mutation will be applied
-     * @param value the type of mutation: a positive int means activation, a negative int means deactivation and a zero means no effect (wild type).
+     * @param value the type of mutation: true means activation, false means deactivation and null means no effect (wild type).
      */
-    void applyMutation(Node node, MutationValue value) {
+    void applyMutation(Node node, Boolean value) {
         getGeneGraph().applyMutation(node, value);
     }
 
