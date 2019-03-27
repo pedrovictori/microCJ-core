@@ -16,14 +16,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 import geom.Distributor;
 import geom.Point3D;
 import geom.RandomRecursiveDistributor;
+import graph.MutationGroup;
 import update.Updatable;
 import update.Update;
 import update.UpdateFlag;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
@@ -34,6 +32,7 @@ public class Tumor {
 	private int initialNumber;
 	private Distributor distributor;
 	private Point3D center;
+	private List<String> mutationGroupsNames = new ArrayList<>();
 	/**
 	 * Maximum number of cells in the tumor
 	 */
