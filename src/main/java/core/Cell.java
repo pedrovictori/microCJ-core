@@ -12,8 +12,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 import geom.Point3D;
 import graph.GeneGraph;
-import mutations.MutationGroup;
-import mutations.MutationValue;
+import graph.MutationGroup;
+import graph.Node;
 import update.Updatable;
 import update.Update;
 import update.UpdateFlag;

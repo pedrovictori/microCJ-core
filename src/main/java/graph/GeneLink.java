@@ -13,7 +13,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import core.Identifier;
-import core.Node;
 
 public class GeneLink extends Identifier {
 	private Node target;

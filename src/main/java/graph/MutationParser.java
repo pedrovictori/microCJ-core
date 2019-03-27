@@ -1,4 +1,4 @@
-package mutations;
+package graph;
 
 /**
  * @author Pedro Victori

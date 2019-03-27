@@ -20,9 +20,10 @@ import update.Updatable;
 import update.Update;
 import update.UpdateFlag;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;

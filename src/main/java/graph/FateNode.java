@@ -1,4 +1,7 @@
-package core;
+package graph;
+
+import core.Fate;
+import core.Identifier;
 
 import java.util.Map;
 
