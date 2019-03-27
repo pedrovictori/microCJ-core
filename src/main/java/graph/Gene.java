@@ -1,6 +1,9 @@
 package core;
 
+import mutations.MutationValue;
+
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Pedro Victori
@@ -19,6 +22,7 @@ public class Gene extends Identifier implements Node {
     private String tag;
     private boolean active;
     private Rule rule;
+    private Boolean mutation; //optional, can be null
 
     public Gene(String tag) {
         this.tag = tag;
@@ -56,7 +60,23 @@ public class Gene extends Identifier implements Node {
 
     @Override
     public boolean computeState(Map<String, Boolean> values) {
-        return rule.computeRule(values);
+        boolean result = rule.computeRule(values);
+
+        getMutation().ifPresent(aBoolean -> result = aBoolean);
+        return result;
+    }
+
+    @Override
+    public void applyMutation(Boolean value) {
+        mutation = value;
+    }
+
+    /**
+     * Returns an Optional with a Boolean value that might be null. true means activation, false deactivation, null no effect (wild type).
+     * @return An empty Optional or an Optional containing a Boolean value.
+     */
+    Optional<Boolean> getMutation() {
+            return Optional.ofNullable(mutation);
     }
 
     @Override
