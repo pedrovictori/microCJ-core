@@ -23,6 +23,7 @@ import org.jgrapht.traverse.GraphIterator;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class GeneGraph {
 	private int containingCellId;
@@ -98,39 +99,22 @@ public class GeneGraph {
 	 */
 	public Fate update(){
 		Fate fate = Fate.NO_FATE_REACHED; //if this run doesn't reach a fate, the method will return this.
-		//update all the nodes with the map generated in the last update step. Check map is not empty in case this is the first run.
+		//update all the nodes with the map generated in the last update step.
+		boolean updates = ! nextUpdate.isEmpty(); //Check if map is empty to save time in case this is the first run.
 		for (Node node : getNodes()) {
-			if (!nextUpdate.isEmpty() && node instanceof InNode) {
-				node.setActive(nextUpdate.get(node));
-			}
+			if (updates && !(node instanceof Input)) node.setActive(nextUpdate.get(node));  //inputs don't get updated by the network, only by external signals
 
 			//Then, update the map with all the current values. This needs to be done even in the first run.
 			currentValues.put(node.getTag(), node.isActive());
 
 			//store the last Fate to be reached TODO what happens if several Fates get activated in the same step?
-			if (node.isActive() && node instanceof FateNode) {
-				fate = ((FateNode)node).getFate();
-			}
+			if (node.isActive() && node instanceof FateNode) fate = ((FateNode)node).getFate();
 		}
 
 		//generate a map with all the projected values after the update. Each rule takes as parameter a map with the current state of every node, which was generated in the loop above.
-		for (Node node : getNodes()) {
-			if (mutations.containsKey(node)) { //if this node is mutated
-				MutationValue mut = mutations.get(node);
-				switch (mut) {
-					case ACTIVATE:
-						break;
-					case DEACTIVATE:
-						break;
-					case NO_EFFECT:
-						break;
-				}
-			}
-			else if (node instanceof InNode){//if it is not an input
-				InNode in = (InNode) node;
-				nextUpdate.put(in, in.getRule().checkStatus(currentValues));
-			}
-		}
+		getNodes().stream().filter(node -> !(node instanceof Input)) //inputs don't get updated by the network, only by external signals
+				.forEach(node -> nextUpdate.put(node, node.computeState(currentValues)));
+
 		return fate;
 	}
 

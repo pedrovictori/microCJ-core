@@ -1,4 +1,7 @@
 package core;
+
+import java.util.Map;
+
 /**
  * @author Pedro Victori
  */
@@ -38,7 +41,12 @@ public class Input extends Identifier implements Node{
 	public boolean isActive() {
 		return active;
 	}
-	
+
+	@Override
+	public boolean computeState(Map<String, Boolean> values) { //this method is here just to comply with the Node interface, but it does nothing.
+		return isActive(); //Nothing to compute, the logic of the network can't affect the activation status of an input node (only external signals can).
+	}
+
 	@Override
 	public String toString() {
 		return tag;

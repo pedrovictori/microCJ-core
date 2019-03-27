@@ -1,4 +1,7 @@
 package core;
+
+import java.util.Map;
+
 /**
  * @author Pedro Victori
  */
@@ -12,7 +15,7 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-public class FateNode extends Identifier implements InNode{
+public class FateNode extends Identifier implements Node{
 	private String tag;
 	private boolean active;
 	private Rule rule;
@@ -30,22 +33,17 @@ public class FateNode extends Identifier implements InNode{
 
 	public FateNode(String tag, String rule) {
 		this(tag);
-		this.rule = Rule.ruleParser(this, rule);
+		this.rule = Rule.ruleParser(rule);
 	}
 
 
 	public FateNode(String tag, String rule, boolean active) {
 		this(tag, active);
-		this.rule = Rule.ruleParser(this, rule);
+		this.rule = Rule.ruleParser(rule);
 	}
 
 	public Fate getFate() {
 		return fate;
-	}
-
-	@Override
-	public Rule getRule() {
-		return rule;
 	}
 
 	@Override
@@ -61,6 +59,11 @@ public class FateNode extends Identifier implements InNode{
 	@Override
 	public boolean isActive() {
 		return active;
+	}
+
+	@Override
+	public boolean computeState(Map<String, Boolean> values) {
+		return rule.computeRule(values);
 	}
 
 	@Override

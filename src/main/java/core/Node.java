@@ -1,4 +1,7 @@
 package core;
+
+import java.util.Map;
+
 /**
  * @author Pedro Victori
  */
@@ -18,4 +21,6 @@ public interface Node extends Identifiable {
 	void setActive(boolean active);
 
 	boolean isActive();
+
+	boolean computeState(Map<String, Boolean> values);
 }

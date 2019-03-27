@@ -19,29 +19,24 @@ import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import java.util.Map;
 
 public class Rule {
-	private Node origin;
 	private Expression<String> rule;
 
-	public Rule(Node origin, Expression<String> rule) {
-		this.origin = origin;
+	Rule(Expression<String> rule) {
 		this.rule = rule;
 	}
 
-	public boolean checkStatus(Map<String, Boolean> values) {
+	/**
+	 * Return the result of the boolean rule using a map of nodes' tags and their values as input
+	 * @param values A Map of tags and boolean activation values.
+	 * @return the result of computing the boolean rule with the specified values.
+	 */
+	boolean computeRule(Map<String, Boolean> values) {
 		Expression<String> resolved = RuleSet.assign(rule, values);
 
 		return Boolean.parseBoolean(resolved.toString());
 	}
 
-	public Node getOrigin() {
-		return origin;
-	}
-
-	public Expression<String> getRule() {
-		return rule;
-	}
-
-	static Rule ruleParser(Node origin, String stringRule) {
+	static Rule ruleParser(String stringRule) {
 		//replace all operators with boolean symbols
 		stringRule = stringRule.replace("and", "&")
 				.replace("or", "|")
@@ -49,6 +44,6 @@ public class Rule {
 
 		Expression<String> parsedExpression = RuleSet.simplify(ExprParser.parse(stringRule));
 
-		return new Rule(origin, parsedExpression);
+		return new Rule(parsedExpression);
 	}
 }
