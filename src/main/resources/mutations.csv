@@ -1,3 +1,4 @@
 group,percent,p53,EGFR
 WT,50,NA,NA
-mut,50,0,1
+mut,10,0,1
+mut2,40,0,NA
