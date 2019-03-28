@@ -38,7 +38,7 @@ public class Cell extends Identifier implements Updatable {
 	private CellState cellState = CellState.NORMAL;
 	private int arrestCountdown;
 	private static final int DEFAULT_ARREST_COUNTDOWN = 10;
-	private Fate lastActivatedFate;
+	private Fate lastActivatedFate = Fate.NO_FATE_REACHED;
 
 	/**
 	 * the cell radius
