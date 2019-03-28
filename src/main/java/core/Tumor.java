@@ -102,8 +102,10 @@ public class Tumor {
 		return mutationGroupsNames;
 	}
 
-	public void updateAllCells() {
-		cellList.parallelStream().forEach(cell -> cell.update().getExecutionRule().execute(cell, this));
+	void updateAllCells() {
+		cellList.parallelStream().forEach(cell -> {
+			cell.update().getExecutionRule().execute(cell, this);
+		});
 
 		/*
 		* Make the necessary changes to the cell list.

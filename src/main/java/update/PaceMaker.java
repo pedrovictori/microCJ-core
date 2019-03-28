@@ -49,10 +49,10 @@ public class PaceMaker {
 
 		Runnable clock = () -> {
 			if(!hasPauseBeenRequested()) {
-				System.out.println("step " + step);
-
-				World.INSTANCE.update();
 				step++;
+				System.out.println("step " + step);
+				World.INSTANCE.update();
+				System.out.println("after update " + step);
 				for (Timed task : listeners) {
 					task.run();
 				}
