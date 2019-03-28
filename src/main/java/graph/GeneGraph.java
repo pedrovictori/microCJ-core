@@ -28,6 +28,8 @@ public class GeneGraph {
 	private List<Node> nodes;
 	private Map<String, Boolean> currentValues = new HashMap<>();
 	Map<Node, Boolean> nextUpdate = new HashMap<>();
+	int decisionTimer;
+	Map<Fate, Integer> decisionCount = new HashMap<>();
 
 	public GeneGraph(int containingCellId) {
 		this.containingCellId = containingCellId;
@@ -41,6 +43,10 @@ public class GeneGraph {
 		} catch (ImportException e) {
 			e.printStackTrace();
 		}
+
+		//the decision timer should start at a random point so not all cells update at the same time.
+		decisionTimer = new Random().nextInt(6) + 3;
+		decisionCount.put(Fate.NO_FATE_REACHED, 1);
 	}
 
 	public int getContainingCellId() {
@@ -103,15 +109,46 @@ public class GeneGraph {
 			//Then, update the map with all the current values. This needs to be done even in the first run.
 			currentValues.put(node.getTag(), node.isActive());
 
-			//store the last Fate to be reached TODO what happens if several Fates get activated in the same step?
-			if (node.isActive() && node instanceof FateNode) fate = ((FateNode)node).getFate();
+
+			if (node.isActive() && node instanceof FateNode) { //count number of times each fate has been activated in each decision window
+				Fate computedFate = ((FateNode) node).getFate();
+				if(decisionCount.containsKey(computedFate)) decisionCount.put(computedFate, decisionCount.get(computedFate)+1); //add 1 to the count if already present in the map
+				else decisionCount.put(computedFate, 1);
+			}
 		}
 
 		//generate a map with all the projected values after the update. Each rule takes as parameter a map with the current state of every node, which was generated in the loop above.
 		getNodes().stream().filter(node -> !(node instanceof Input)) //inputs don't get updated by the network, only by external signals
 				.forEach(node -> nextUpdate.put(node, node.computeState(currentValues)));
 
+		//if 5 steps have passed, make a decision, restart the counter, and clear the counts for each fate
+		if (decisionTimer == 0) {
+			fate = decideFate();
+			decisionTimer = 5;
+			decisionCount.clear();
+			decisionCount.put(Fate.NO_FATE_REACHED, 1); //needed in the case that after 5 steps no fate has ever been reached
+		}
+		decisionTimer--;
 		return fate;
+	}
+
+	private Fate decideFate() {
+		List<Fate> mostVotedFates = new ArrayList<>(); //it's a list in case there's a tie
+		int highest = 0;
+		for (Fate fate : decisionCount.keySet()) {
+			//if this fate has more votes than the others in the list, clear list. If it has at least as many as the ones in the list, add it to the list.
+			if(decisionCount.get(fate) >= highest) {
+				if (decisionCount.get(fate) > highest) {
+					highest = decisionCount.get(fate);
+					mostVotedFates.clear();
+				}
+				mostVotedFates.add(fate);
+			}
+		}
+
+		//returns a random element from the final list
+		Collections.shuffle(mostVotedFates);
+		return mostVotedFates.get(0);
 	}
 
 	/**
