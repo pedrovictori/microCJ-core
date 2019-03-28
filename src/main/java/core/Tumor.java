@@ -101,6 +101,9 @@ public class Tumor {
 		return maxSize;
 	}
 
+	public int getTotalCount() {
+		return cellList.size();
+	}
 	public List<String> getMutationGroupsNames() {
 		return mutationGroups.stream().map(MutationGroup::getName).collect(Collectors.toList());
 	}
