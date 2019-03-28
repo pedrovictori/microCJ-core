@@ -21,8 +21,9 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 public class MutationGroup {
-	String name;
-	Map<String, Boolean> mutations; //a map with pairs of nodes' tags and integers. A negative int means deactivation, zero means no effect (wild type) and a positive int means activation
+	private String name;
+	private Map<String, Boolean> mutations; //a map with pairs of nodes' tags and integers. A negative int means deactivation, zero means no effect (wild type) and a positive int means activation
+	private int cellCount;
 
 	public MutationGroup(String name, Map<String, Boolean> mutations) {
 		this.name = name;
@@ -35,6 +36,14 @@ public class MutationGroup {
 
 	public Map<String, Boolean> getMutations() {
 		return mutations;
+	}
+
+	public void changeCellCount(int change) {
+		cellCount += change;
+	}
+
+	public int getCellCount() {
+		return cellCount;
 	}
 
 	/**

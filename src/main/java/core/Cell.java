@@ -81,7 +81,7 @@ public class Cell extends Identifier implements Updatable {
 	 * @return an Optional String
 	 */
 	public Optional<String> getMutationGroupName() {
-		return getMutationGroup().map(x -> x.getName());
+		return getMutationGroup().map(MutationGroup::getName);
 	}
 
 	/**
@@ -89,10 +89,13 @@ public class Cell extends Identifier implements Updatable {
 	 * @param mutationGroup the new mutation group for the cell.
 	 */
 	void setMutationGroup(MutationGroup mutationGroup) {
-		for (String tag : mutationGroup.getMutations().keySet()) {
-			applyMutation(tag, mutationGroup.getMutations().get(tag));
+		if (mutationGroup != null) {
+			mutationGroup.changeCellCount(1);
+			for (String tag : mutationGroup.getMutations().keySet()) {
+				applyMutation(tag, mutationGroup.getMutations().get(tag));
+			}
+			this.mutationGroup = mutationGroup;
 		}
-		this.mutationGroup = mutationGroup;
 	}
 
 	/**

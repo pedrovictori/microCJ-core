@@ -23,6 +23,7 @@ import update.UpdateFlag;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
@@ -33,7 +34,8 @@ public class Tumor {
 	private int initialNumber;
 	private Distributor distributor;
 	private Point3D center;
-	private List<String> mutationGroupsNames = new ArrayList<>();
+	private List<MutationGroup> mutationGroups = new ArrayList<>();
+
 	/**
 	 * Maximum number of cells in the tumor
 	 */
@@ -46,23 +48,23 @@ public class Tumor {
 
 		//determine the location for every cell
 		distributor = new RandomRecursiveDistributor(); //todo choose in user settings
-		cellLocations = new CopyOnWriteArraySet<>(distributor.populate(initialNumber, cellRadius));
+		cellLocations = new CopyOnWriteArraySet<>(distributor.populate(initialNumber, cellRadius)); //slow implementation, needed for thread safety, todo look into faster alternatives
 
 		for (Point3D location : cellLocations) { //create all initial cells
 			cellList.add(new Cell(location, cellRadius));
 		}
 
 		//parse the mutation groups
-		Map<MutationGroup, Double> mutationGroups = MutationGroup.parseMutationsFile("mutations.csv"); //todo choose file name in user settings
+		Map<MutationGroup, Double> parsedMutationGroups = MutationGroup.parseMutationsFile("mutations.csv"); //todo choose file name in user settings
 
 		//put all cells from cell list into a queue to wait to receive their mutation group
 		Queue<Cell> cellsWaitingForGroup = new LinkedList<>(cellList);
 
 		//for every mutation group, assign it to the specified percentage of cells
-		for (MutationGroup mutationGroup : mutationGroups.keySet()) {
-			mutationGroupsNames.add(mutationGroup.getName());
-			Double percentage = mutationGroups.get(mutationGroup);
-			int cellsInThisGroup = (int) Math.ceil((initialNumber * percentage)/100);
+		for (MutationGroup mutationGroup : parsedMutationGroups.keySet()) {
+			mutationGroups.add(mutationGroup);
+			Double percentage = parsedMutationGroups.get(mutationGroup);
+			int cellsInThisGroup = (int) Math.ceil((initialNumber * percentage) / 100);
 			for (int i = 0; i < cellsInThisGroup; i++) {
 				Cell nextCell = cellsWaitingForGroup.poll();
 				if (nextCell == null) break; //nextCell will be null if the queue was empty, so we can finish the loop
@@ -100,7 +102,11 @@ public class Tumor {
 	}
 
 	public List<String> getMutationGroupsNames() {
-		return mutationGroupsNames;
+		return mutationGroups.stream().map(MutationGroup::getName).collect(Collectors.toList());
+	}
+
+	public Map<String, Integer> getMutationGroupsCounts() {
+		return mutationGroups.stream().collect(Collectors.toMap(MutationGroup::getName, MutationGroup::getCellCount));
 	}
 
 	void updateAllCells() {
@@ -109,8 +115,8 @@ public class Tumor {
 		});
 
 		/*
-		* Make the necessary changes to the cell list.
-		* Doing it after the update step guarantees that there are not co-modification issues and the updating order doesn't matter
+		 * Make the necessary changes to the cell list.
+		 * Doing it after the update step guarantees that there are not co-modification issues and the updating order doesn't matter
 		 */
 		while (World.INSTANCE.getRemainingUpdates() > 0) {
 			Update<UpdateFlag, Updatable> update = World.INSTANCE.getUpdateFromQueue();
@@ -119,6 +125,7 @@ public class Tumor {
 					//This is done after new cells have already been located, so the order in which cells are looped doesn't matter
 					cellLocations.remove(((Cell) update.getUpdatable()).getLocation());
 					cellList.remove((Cell) update.getUpdatable());
+					((Cell) update.getUpdatable()).getMutationGroup().ifPresent(mutationGroup -> mutationGroup.changeCellCount(-1));
 					break;
 				case NECROTIC_CELL:
 					//nothing to do
@@ -132,10 +139,11 @@ public class Tumor {
 
 	/**
 	 * Checks if there is available space next to the cell, if so it creates a copy  of the cell and places it next to the original cell.
+	 *
 	 * @param cell the original cell to be copied
 	 */
 	void proliferate(Cell cell) {
-		if(cellList.size() < maxSize){
+		if (cellList.size() < maxSize) {
 			/* create a copy to iterate over in the next method in a thread-safe way
 			 * todo come back to this as other ways to achieve thread safety might be more efficient */
 			//Set<Point3D> cellLocationsCopy = new HashSet<>(cellLocations);
