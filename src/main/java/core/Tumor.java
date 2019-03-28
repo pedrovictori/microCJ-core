@@ -22,6 +22,7 @@ import update.Update;
 import update.UpdateFlag;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Tumor {
 	private static final int DEFAULT_INITIAL_SIZE = 100;
@@ -45,7 +46,7 @@ public class Tumor {
 
 		//determine the location for every cell
 		distributor = new RandomRecursiveDistributor(); //todo choose in user settings
-		cellLocations = distributor.populate(initialNumber, cellRadius);
+		cellLocations = new CopyOnWriteArraySet<>(distributor.populate(initialNumber, cellRadius));
 
 		for (Point3D location : cellLocations) { //create all initial cells
 			cellList.add(new Cell(location, cellRadius));
@@ -137,8 +138,8 @@ public class Tumor {
 		if(cellList.size() < maxSize){
 			/* create a copy to iterate over in the next method in a thread-safe way
 			 * todo come back to this as other ways to achieve thread safety might be more efficient */
-			Set<Point3D> cellLocationsCopy = new HashSet<>(cellLocations);
-			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocationsCopy);
+			//Set<Point3D> cellLocationsCopy = new HashSet<>(cellLocations);
+			Point3D location = distributor.locateEmptySpotNextTo(cell.getLocation(), cell.getRadius() * 2, cellLocations);
 			if (location != null) { //if there's free space next to this cell
 				Cell newCell = Cell.copy(cell);
 				newCell.setLocation(location);
