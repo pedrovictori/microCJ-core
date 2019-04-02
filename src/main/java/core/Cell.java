@@ -47,8 +47,9 @@ public class Cell extends Identifier implements Updatable {
 	private final static double DEFAULT_RADIUS = 5;
 	private MutationGroup mutationGroup;
 
-	public Cell() {
-		geneGraph = GeneGraph.RandomlyActivatedGraph(getId()).turnNode("Oxygen_supply", true); //turn oxygen on to avoid necrosis while oxygen diffusion gets implemented todo remove this when no longer necessary
+
+	public Cell() {//todo change this when gene graph file is chosen from user settings
+		geneGraph = GeneGraph.RandomlyActivatedGraph(GeneGraph.getDefaultFile()).turnNode("Oxygen_supply", true); //turn oxygen on to avoid necrosis while oxygen diffusion gets implemented todo remove this when no longer necessary
 		geneGraph.update(); //update to map the nodes current state in this first run (see GeneGraph.update method body)
 		radius = DEFAULT_RADIUS;
 	}

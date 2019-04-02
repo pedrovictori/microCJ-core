@@ -28,7 +28,7 @@ import java.io.Writer;
 
 public class GraphTest {
 	public static void main(String[] args) {
-		GeneGraph geneGraph = new GeneGraph(1);
+		GeneGraph geneGraph = new GeneGraph(GeneGraph.getDefaultFile());
 		iterateBFromInputs(geneGraph);
 	}
 

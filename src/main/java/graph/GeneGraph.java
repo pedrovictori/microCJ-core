@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.*;
 
 public class GeneGraph {
-	private int containingCellId;
+	private static final String DEFAULT_FILE = "mod.graphml"; //todo choose in user settings
 	private Graph<Node, GeneLink> graph;
 	private List<Node> nodes;
 	private Map<String, Boolean> currentValues = new HashMap<>();
@@ -31,12 +31,15 @@ public class GeneGraph {
 	int decisionTimer;
 	Map<Fate, Integer> decisionCount = new HashMap<>();
 
-	public GeneGraph(int containingCellId) {
-		this.containingCellId = containingCellId;
+	/**
+	 * Constructs a new instance of GeneGraph by importing a graphml file.
+	 * @param filename the name of the file, which should be placed in the resources folder
+	 */
+	public GeneGraph(String filename) {
 
 		graph = new DefaultDirectedGraph<>(GeneLink.class);
 		GraphImporter<Node, GeneLink> importer = createImporter();
-		File graphFile = new File(GeneGraph.class.getClassLoader().getResource("mod.graphml").getPath());
+		File graphFile = new File(GeneGraph.class.getClassLoader().getResource(filename).getPath());
 		//System.out.println(graphFile.exists());
 		try {
 			importer.importGraph(graph, graphFile);
@@ -49,8 +52,12 @@ public class GeneGraph {
 		decisionCount.put(Fate.NO_FATE_REACHED, 1);
 	}
 
-	public int getContainingCellId() {
-		return containingCellId;
+	/**
+	 * Constructs a new instance of GeneGraph based on the supplied graph.
+	 * @param graph an existing Graph with vertex Node and edge GeneLink
+	 */
+	public GeneGraph(Graph<Node, GeneLink> graph) {
+		this.graph = graph;
 	}
 
 	public Graph<Node, GeneLink> getGraph() {
@@ -94,6 +101,11 @@ public class GeneGraph {
 		}
 		return set;
 	}
+
+	public static String getDefaultFile() {
+		return DEFAULT_FILE;
+	}
+
 
 	/**
 	 * When called, update the whole gene network and return the fate reached.
@@ -171,14 +183,26 @@ public class GeneGraph {
 	}
 
 	/**
-	 * Factory method for creating a new instance of GeneGraph which inputs and nodes are inactive but some of the genes are active at random
+	 * Factory method for creating a new instance of GeneGraph (with the graphml importer constructor) which inputs and nodes are inactive but some of the genes are active at random
 	 *
-	 * @param containingCellId
+	 * @param filename the name of the graphml file, located in the resources folder.
 	 * @return
 	 */
-	public static GeneGraph RandomlyActivatedGraph(int containingCellId) {
-		return new GeneGraph(containingCellId).turnNodesOff().activateGenesAtRandom();
+	public static GeneGraph RandomlyActivatedGraph(String filename) {
+		return new GeneGraph(filename).turnNodesOff().activateGenesAtRandom();
 	}
+
+	/**
+	 * Factory method for creating a new instance of GeneGraph (with the graph-supplied constructor) which inputs and nodes are inactive but some of the genes are active at random
+	 *
+	 * @param graph an existing Graph with vertex Node and edge GeneLink
+	 * @return
+	 */
+	public static GeneGraph RandomlyActivatedGraph(Graph<Node, GeneLink> graph) {
+		return new GeneGraph(graph).turnNodesOff().activateGenesAtRandom();
+	}
+
+
 
 	private GeneGraph activateGenesAtRandom() {
 		Random r = new Random();
