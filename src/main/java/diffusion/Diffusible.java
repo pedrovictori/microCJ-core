@@ -41,7 +41,7 @@ public interface Diffusible {
 
 	/**
 	 *  Returns the input node activated by this substance.
-	 * @return
+	 * @return a String containing the unique tag of the input node.
 	 */
-	Input getInputNode();
+	String getInputNode();
 }

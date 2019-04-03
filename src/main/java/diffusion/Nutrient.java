@@ -2,48 +2,13 @@ package diffusion;
 
 import graph.Input;
 
-public class Nutrient implements Diffusible {
-	private String name;
-	private Double initialConcentration;
-	private Double defaultProbabilityModifier;
-	private Double diffusionCoefficient;
-	private Double defaultConsumption;
-	private Double defaultProduction;
-	private Input inputNode;
+public class Nutrient extends DiffusibleBase {
 
-//todo builder pattern for constructor
-	@Override
-	public String getName() {
-		return name;
+	public Nutrient(String name, Input inputNode, Double initialConcentration, Double defaultProbabilityModifier, Double diffusionCoefficient, Double defaultConsumption, Double defaultProduction) {
+		super(name, inputNode, initialConcentration, defaultProbabilityModifier, diffusionCoefficient, defaultConsumption, defaultProduction);
 	}
 
-	@Override
-	public Double getInitialConcentration() {
-		return initialConcentration;
-	}
-
-	@Override
-	public Double getDefaultProbabilityModifier() {
-		return defaultProbabilityModifier;
-	}
-
-	@Override
-	public Double getDiffusionCoefficient() {
-		return diffusionCoefficient;
-	}
-
-	@Override
-	public Double getDefaultConsumption() {
-		return defaultConsumption;
-	}
-
-	@Override
-	public Double getDefaultProduction() {
-		return defaultProduction;
-	}
-
-	@Override
-	public Input getInputNode() {
-		return inputNode;
+	public Nutrient(Diffusible diffusible) {
+		super(diffusible);
 	}
 }

@@ -3,53 +3,26 @@ package diffusion;
 import graph.Input;
 import graph.Node;
 
-public class Factor implements Diffusible {
-	private String name;
-	private Double initialConcentration;
-	private Double defaultProbabilityModifier;
-	private Double diffusionCoefficient;
-	private Double defaultConsumption;
-	private Double defaultProduction;
-	private Input inputNode;
-	private Node outputNode;
+public class Factor extends DiffusibleBase{
+	private String outputNode;
 
-	//todo builder pattern for constructor
-	@Override
-	public String getName() {
-		return name;
+	public Factor(String name, String inputNode, String outputNode, Double initialConcentration, Double defaultProbabilityModifier, Double diffusionCoefficient, Double defaultConsumption, Double defaultProduction) {
+		super(name, inputNode, initialConcentration, defaultProbabilityModifier, diffusionCoefficient, defaultConsumption, defaultProduction);
+		this.outputNode = outputNode;
 	}
 
-	@Override
-	public Double getInitialConcentration() {
-		return initialConcentration;
+	public Factor(Diffusible diffusible) {
+		super(diffusible);
 	}
 
-	@Override
-	public Double getDefaultProbabilityModifier() {
-		return defaultProbabilityModifier;
-	}
-
-	@Override
-	public Double getDiffusionCoefficient() {
-		return diffusionCoefficient;
-	}
-
-	@Override
-	public Double getDefaultConsumption() {
-		return defaultConsumption;
-	}
-
-	@Override
-	public Double getDefaultProduction() {
-		return defaultProduction;
-	}
-
-	@Override
-	public Input getInputNode() {
-		return inputNode;
-	}
-
-	public Node getOutputNode() {
+	public String getOutputNode() {
+		if (outputNode == null) {
+			throw new IllegalStateException();
+		}
 		return outputNode;
+	}
+
+	public void setOutputNode(String outputNode) {
+		this.outputNode = outputNode;
 	}
 }
