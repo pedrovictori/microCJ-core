@@ -1,0 +1,2 @@
+name,type,input-node,output-node,initial-concentration,diffusion-coefficient,consumption,production,probability-modifier
+oxygen,nutrient,oxygen_supply,na,0.28,e^-9,5e^-9,0,50
